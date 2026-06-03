@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const flash = require('connect-flash');
 const express = require('express');
 const session = require('express-session');
 
@@ -19,6 +20,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 
 app.use(authRoutes);

@@ -5,7 +5,7 @@ const User = require('../models/user');
 
 exports.loginPage = (req, res) => res.render('login');
 
-exports.dashboard = (req, res) => res.render(
+exports.dashboardPage = (req, res) => res.render(
     'dashboard',
     { user: req.session.User }
 );
@@ -26,22 +26,29 @@ exports.login = async (req, res) => {
         where: { email }
     });
     
-    if (!user) return res.status(400).json({
-        message: 'Usuário não encontrado'
-    });
+    if (!user) {
+        req.flash('error_msg', 'Usuário inválido');
+        res.redirect('/');
+        return
+    }
 
     const validPassword = await bcrypt.compare(
         password,
         user.password
     );
 
-    if (!validPassword) return res.status(400).json({ message: 'Senha inválida' });
+    if (!validPassword) {
+        req.flash('error_msg', 'Senha inválida');
+        res.redirect('/');
+        return
+    }
 
     req.session.user = { email: user.email };
 
-    //res.json({ message: 'Login realizado' });
-    res.render( 'dashboard',
-    { user: req.session.user });
+    res.render(
+        'dashboard',
+        { user: req.session.user, success_msg: 'Login realizado com sucesso!' }
+    );
 };
 
 exports.logout = (req, res) => {

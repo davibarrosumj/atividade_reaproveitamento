@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Login</title>
+    </head>
     <body>
         <h1>Login</h1>
+
+        <% if(error_msg != ''){ %>
+            <div class="alert alert-error">
+                <%= error_msg %>
+            </div>
+        <% } %>
+
         <form id="form" action="/login" method="post">
             <input type="email" name="email" placeholder="email">
             <input type="password" name="password" placeholder="password">
