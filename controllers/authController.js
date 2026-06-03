@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
@@ -9,7 +11,7 @@ exports.dashboard = (req, res) => res.render(
 );
 
 exports.createUser = async (req, res) => {
-    const hash = await bcrypt.hash('UMJ123456', 10);
+    const hash = await bcrypt.hash(process.env.PU_PASSWORD, 10);
     await User.create({
         email: 'davi@mail.com',
         password: hash
