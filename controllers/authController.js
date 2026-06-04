@@ -7,11 +7,6 @@ const User = require('../models/user');
 
 exports.loginPage = (req, res) => res.render('login');
 
-exports.dashboardPage = (req, res) => res.render(
-    'dashboard',
-    { user: req.session.User }
-);
-
 exports.createUser = async (req, res) => {
     const hash = await bcrypt.hash(process.env.PU_PASSWORD, 10);
     await User.create({

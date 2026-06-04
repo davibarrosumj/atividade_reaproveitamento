@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const sequelize = require('./database');
 const authRoutes = require('./routes/authRoutes');
+const dashRoutes = require('./routes/dashRoutes');
 
 const app = express();
 
@@ -24,12 +25,13 @@ app.use(session({
 app.use(flash());
 
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  next();
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
 });
 
 app.use(authRoutes);
+app.use(dashRoutes);
 
 sequelize.sync().then(() => app.listen(
     process.env.PORT,
