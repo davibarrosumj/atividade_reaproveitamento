@@ -59,8 +59,8 @@ const adminStatusMiddleware = (req, res, next) => {
     const authenticatedUser = getAuthenticatedSessionUser(req);
 
     req.session.user = authenticatedUser;
-    req.isAdmin = Boolean(authenticatedUser && authenticatedUser.userType === 'super');
-    req.isPowerUser = Boolean(authenticatedUser && authenticatedUser.userType === 'power');
+    req.isAdmin = Boolean(authenticatedUser && authenticatedUser.userType === 'simple');
+    req.isPowerUser = Boolean(authenticatedUser && authenticatedUser.userType === 'super');
     req.canCreateAdmin = req.isPowerUser;
 
     next();
@@ -83,9 +83,9 @@ const authorize = (allowedTypes) => {
 const cadastroAccessMiddleware = (req, res, next) => {
     const authenticatedUser = getAuthenticatedSessionUser(req);
     
-    // Se o usuário estiver autenticado, apenas o tipo 'power' pode acessar a tela de cadastro
-    if (authenticatedUser && authenticatedUser.userType !== 'power') {
-        req.flash('error', 'Acesso negado. Apenas o Power User pode criar novos administradores.');
+    // Apenas o Super User ('super') logado pode acessar o cadastro
+    if (!authenticatedUser || authenticatedUser.userType !== 'super') {
+        req.flash('error', 'Acesso negado. Apenas o Super User pode criar novos usuários.');
         return res.redirect('/dashboard');
     }
     

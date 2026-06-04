@@ -232,19 +232,19 @@ function runMiddlewareTests() {
 
     // Teste 6: authorize permite tipos autorizados
     {
-        const req = { user: { userType: 'super' } };
+        const req = { user: { userType: 'simple' } };
         let nextCalled = false;
         const res = {};
         const next = () => { nextCalled = true; };
 
-        authorize(['super'])(req, res, next);
-        assert.ok(nextCalled, 'Deve permitir acesso do super.');
+        authorize(['simple'])(req, res, next);
+        assert.ok(nextCalled, 'Deve permitir acesso do simple.');
     }
 
     // Teste 7: authorize rejeita tipos não autorizados
     {
         const req = {
-            user: { userType: 'simple' },
+            user: { userType: 'super' },
             flash: (key, msg) => {
                 assert.strictEqual(key, 'error');
             }
@@ -258,11 +258,11 @@ function runMiddlewareTests() {
         };
         const next = () => { throw new Error('Não deveria chamar next()'); };
 
-        authorize(['super'])(req, res, next);
+        authorize(['simple'])(req, res, next);
         assert.ok(redirected, 'Deve redirecionar para /dashboard.');
     }
 
-    // Teste 8: cadastroAccessMiddleware bloqueia logado não-power
+    // Teste 8: cadastroAccessMiddleware bloqueia logado não-super
     {
         const req = {
             session: { authToken: validToken }, // userType é 'simple'
@@ -284,11 +284,11 @@ function runMiddlewareTests() {
         assert.ok(redirected, 'Deve bloquear usuário comum logado.');
     }
 
-    // Teste 9: cadastroAccessMiddleware permite power user logado
+    // Teste 9: cadastroAccessMiddleware permite super user logado
     {
-        const powerToken = jwt.sign({ ...payload, userType: 'power' }, process.env.JWT_SECRET);
+        const superToken = jwt.sign({ ...payload, userType: 'super' }, process.env.JWT_SECRET);
         const req = {
-            session: { authToken: powerToken },
+            session: { authToken: superToken },
             headers: {}
         };
         let nextCalled = false;
@@ -296,21 +296,29 @@ function runMiddlewareTests() {
         const next = () => { nextCalled = true; };
 
         cadastroAccessMiddleware(req, res, next);
-        assert.ok(nextCalled, 'Deve permitir Power User.');
+        assert.ok(nextCalled, 'Deve permitir Super User.');
     }
 
-    // Teste 10: cadastroAccessMiddleware permite visitante (não logado)
+    // Teste 10: cadastroAccessMiddleware bloqueia visitante (não logado)
     {
         const req = {
             session: {},
-            headers: {}
+            headers: {},
+            flash: (key, msg) => {
+                assert.strictEqual(key, 'error');
+            }
         };
-        let nextCalled = false;
-        const res = {};
-        const next = () => { nextCalled = true; };
+        let redirected = false;
+        const res = {
+            redirect: (path) => {
+                redirected = true;
+                assert.strictEqual(path, '/dashboard');
+            }
+        };
+        const next = () => { throw new Error('Não deveria chamar next()'); };
 
         cadastroAccessMiddleware(req, res, next);
-        assert.ok(nextCalled, 'Deve permitir visitante.');
+        assert.ok(redirected, 'Deve bloquear visitante.');
     }
 
     // Restaurar env original

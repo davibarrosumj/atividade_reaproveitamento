@@ -33,26 +33,25 @@ Estas praticas devem orientar as proximas features deste projeto.
 - `JWT_SECRET` assina o JWT guardado em `req.session.authToken`; nao usar fallback para `SESSION_SECRET`.
 - O login deve assinar no JWT apenas dados essenciais do usuario: `id`, `name`, `email` e `userType`.
 - `authMiddleware` representa autenticacao obrigatoria: sem JWT valido, a rota deve redirecionar para login.
-- `adminStatusMiddleware` calcula permissões sem bloquear rotas: define `req.isAdmin`, `req.isPowerUser` e `req.canCreateAdmin` a partir de `userType`.
-- `authorize` é o middleware único de autorização que restringe acesso a rotas baseado nos perfis fornecidos (ex: `authorize(['super'])`).
-- `cadastroAccessMiddleware` protege a rota de cadastro de administrador limitando o acesso a usuários do tipo `'power'`.
+- `adminStatusMiddleware` calcula permissões sem bloquear rotas: define `req.isAdmin` (se `'simple'`) e `req.canCreateAdmin` (se `'super'`) a partir de `userType`.
+- `authorize` é o middleware único de autorização que restringe acesso a rotas baseado nos perfis fornecidos (ex: `authorize(['simple'])`).
+- `cadastroAccessMiddleware` protege a rota de cadastro de operadores limitando o acesso a usuários do tipo `'super'`.
 
 ## Usuarios e privilegios
 
 - `User` e o model Sequelize base. A flag `isPowerUser` foi descontinuada.
 - Os perfis são definidos estritamente na coluna `userType` com os valores:
-  - `'simple'`: Usuário comum, acessa o painel de vagas básico.
-  - `'super'`: Administrador, gerencia entrada/saída de veículos e altera capacidade total.
-  - `'power'`: Power User, acessa o painel básico mas tem acesso exclusivo a criar novos administradores.
-- O power user inicial continua garantido durante a inicializacao.
-- `isAdmin` deriva de `userType === 'super'`.
-- `canCreateAdmin` deriva de `userType === 'power'`.
+  - `'super'`: Super User, acessa o dashboard de usuário com atalho exclusivo para criar novos operadores (`'simple'`).
+  - `'simple'`: Simple User (operador), gerencia entrada/saída de veículos, vagas, tíquetes e devedores.
+- O super user inicial continua garantido durante a inicializacao.
+- `isAdmin` deriva de `userType === 'simple'`.
+- `canCreateAdmin` deriva de `userType === 'super'`.
 
 ## Dashboards
 
 - A rota publica do painel deve permanecer `/dashboard` (usando o prefixo `/dashboard` registrado globalmente no `app.js`).
 - A escolha entre `dashboardUser` e `dashboardManager` deve ser feita no controller baseando-se no `req.isAdmin`.
-- O dashboard do power user (que renderiza `dashboardUser.ejs` porque ele possui `userType === 'power'`) deve exibir o atalho para cadastrar novos administradores se `canCreateAdmin` for verdadeiro.
+- O dashboard do Super User (que renderiza `dashboardUser.ejs` porque ele possui `userType === 'super'`) deve exibir o atalho para cadastrar novos operadores se `canCreateAdmin` for verdadeiro.
 
 ## Backlog
 

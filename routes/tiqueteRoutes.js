@@ -5,8 +5,8 @@ const tiqueteController = require('../controllers/tiqueteController');
 
 const { authMiddleware, adminStatusMiddleware, authorize } = require('../middlewares/auth');
 
-router.get('/', authMiddleware, adminStatusMiddleware, authorize(['super']), tiqueteController.getTiquetes);
-router.get('/devedores', authMiddleware, adminStatusMiddleware, authorize(['super']), tiqueteController.getDevedores);
-router.post('/pagar/:id', authMiddleware, adminStatusMiddleware, authorize(['super']), tiqueteController.postPagarTiquete);
+router.get('/', authMiddleware, adminStatusMiddleware, authorize(['simple']), tiqueteController.getTiquetes);
+router.get('/devedores', authMiddleware, adminStatusMiddleware, authorize(['simple']), tiqueteController.getDevedores);
+router.post('/pagar/:id', authMiddleware, adminStatusMiddleware, authorize(['simple']), tiqueteController.postPagarTiquete);
 
 module.exports = router;

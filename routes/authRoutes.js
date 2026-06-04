@@ -12,7 +12,6 @@ router.get('/cadastro', adminStatusMiddleware, cadastroAccessMiddleware, userCon
 router.post('/login', authController.postLogin);
 router.post('/logout', authController.postLogout);
 router.post('/cadastro', adminStatusMiddleware, cadastroAccessMiddleware, userController.postCadastro);
-router.post('/register', authController.postRegister);
 
 router.initializeSystem = authController.initializeSystem;
 

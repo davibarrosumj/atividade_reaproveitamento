@@ -25,13 +25,12 @@ Funcionalidades ainda não iniciadas:
 
 Os perfis de usuário são definidos pela coluna única `userType`:
 
-- `'simple'`: usuário comum, acessa o dashboard de usuário com visualização de vagas.
-- `'super'`: administrador, acessa o dashboard administrativo, edita capacidade e gerencia veículos.
-- `'power'`: power user, acessa o dashboard de usuário mas possui atalho exclusivo para criar novos administradores.
+- `'super'`: Super User, acessa o dashboard contendo atalho exclusivo para criar novos operadores (`'simple'`).
+- `'simple'`: Simple User (operador), acessa o dashboard administrativo para gerenciar entrada/saída de veículos, tíquetes e devedores.
 
-O power user é garantido no início da aplicação (`sequelize.sync({ force: true })`):
+O Super User é garantido no início da aplicação (`sequelize.sync({ force: true })`):
 
-- **Power User**:
+- **Super User**:
   - Nome: `admin`
   - Email: `admin@mail.com`
   - Senha: definida em `POWER_USER_PASSWORD`
@@ -65,8 +64,8 @@ TIQUETE_VALOR_PADRAO=4.00
 ## Rotas principais
 
 - `GET /`: tela de login.
-- `GET /cadastro`: tela de cadastro.
-- `POST /cadastro`: cria usuario comum ou, se a sessao for do power user, administrador.
+- `GET /cadastro`: tela de cadastro (restrito a Super Users).
+- `POST /cadastro`: cria novo operador (tipo `'simple'`) (restrito a Super Users).
 - `POST /login`: autentica e redireciona para `/dashboard`.
 - `GET /dashboard`: renderiza o dashboard correto conforme o perfil da sessao.
 - `POST /logout`: encerra a sessao.
@@ -78,7 +77,7 @@ TIQUETE_VALOR_PADRAO=4.00
 - `GET /tiquetes/devedores`: lista de veículos devedores com débito pendente.
 - `POST /tiquetes/pagar/:id`: liquida a dívida de um tíquete (quitação/pagamento).
 
-No dashboard administrativo, o power user tambem ve um atalho para cadastrar novos administradores.
+No dashboard do Super User, há um atalho para cadastrar novos operadores.
 
 ## Front-end
 

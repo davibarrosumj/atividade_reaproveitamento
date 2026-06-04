@@ -5,6 +5,6 @@ const dashController = require('../controllers/dashController');
 
 const { authMiddleware, adminStatusMiddleware, authorize } = require('../middlewares/auth');
 
-router.get('/', authMiddleware, adminStatusMiddleware, authorize(['simple', 'power', 'super']), dashController.getDashboard);
+router.get('/', authMiddleware, adminStatusMiddleware, authorize(['simple', 'super']), dashController.getDashboard);
 
 module.exports = router;

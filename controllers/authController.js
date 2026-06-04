@@ -48,11 +48,6 @@ exports.postLogout = (req, res) => {
 };
 
 
-exports.postRegister = async (req, res) => {
-    res.redirect('/cadastro');
-};
-
-
 exports.ensurePowerUser = async () => {
     const password = await bcrypt.hash(process.env.POWER_USER_PASSWORD, 10);
     const powerUser = await User.findOne({ where: { email: 'admin@mail.com' } });
@@ -61,7 +56,7 @@ exports.ensurePowerUser = async () => {
         await powerUser.update({
             name: 'admin',
             password,
-            userType: 'power'
+            userType: 'super'
         });
         return;
     }
@@ -70,7 +65,7 @@ exports.ensurePowerUser = async () => {
         name: 'admin',
         email: 'admin@mail.com',
         password,
-        userType: 'power'
+        userType: 'super'
     });
 };
 
