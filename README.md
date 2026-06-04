@@ -4,33 +4,37 @@ Aplicacao web simples em Node.js, Express, EJS, Sequelize e PostgreSQL para evol
 
 ## Status atual
 
-O projeto possui autenticacao basica com sessao e JWT, cadastro de usuarios, separacao entre usuario comum e administrador, power user inicial e dashboards diferentes por perfil.
+O projeto possui autenticação básica com sessão e JWT, cadastro de usuários com três perfis distintos, controle de ocupação e capacidade, além de painel para entrada e saída de veículos.
 
-Funcionalidades concluidas:
+Funcionalidades concluídas:
 
-- US01: exibicao de vagas disponiveis, porcentagem de ocupacao e edicao administrativa da capacidade.
+- US01: exibição de vagas disponíveis, porcentagem de ocupação e edição administrativa da capacidade.
+- US02: entrada e saída de veículos com controle de vagas em tempo real e validação de placas.
+- US05: cadastro de usuários com diferenciação de perfis (simples, super e power).
 
 Funcionalidades em andamento:
 
-- US05: cadastro de usuarios com diferenciacao entre usuario comum, administrador e power user.
+- Nenhuma.
 
-Funcionalidades ainda nao iniciadas:
+Funcionalidades ainda não iniciadas:
 
-- Entrada e saida de veiculos.
-- Controle e consumo de tiquetes.
-- Relatorios, estatisticas e historico de uso.
+- Controle e consumo de tíquetes.
+- Relatórios, estatísticas e histórico de uso.
 
-## Perfis de usuario
+## Perfis de usuário
 
-- `SimpleUser`: usuario comum, acessa o dashboard de usuario.
-- `SuperUser`: administrador, acessa o dashboard administrativo.
-- Power user: administrador especial e unico que pode criar novos administradores.
+Os perfis de usuário são definidos pela coluna única `userType`:
 
-O power user e garantido no inicio da aplicacao:
+- `'simple'`: usuário comum, acessa o dashboard de usuário com visualização de vagas.
+- `'super'`: administrador, acessa o dashboard administrativo, edita capacidade e gerencia veículos.
+- `'power'`: power user, acessa o dashboard de usuário mas possui atalho exclusivo para criar novos administradores.
 
-- Nome: `admin`
-- Email: `admin@mail.com`
-- Senha: definida em `POWER_USER_PASSWORD`
+O power user é garantido no início da aplicação (`sequelize.sync({ force: true })`):
+
+- **Power User**:
+  - Nome: `admin`
+  - Email: `admin@mail.com`
+  - Senha: definida em `POWER_USER_PASSWORD`
 
 ## Configuracao
 

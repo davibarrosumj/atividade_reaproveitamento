@@ -7,8 +7,7 @@ class SimpleUser {
     static async create(userData) {
         return User.create({
             ...userData,
-            userType: 'simple',
-            isPowerUser: false
+            userType: 'simple'
         });
     }
 }
@@ -18,8 +17,7 @@ class SuperUser {
     static async create(userData) {
         return User.create({
             ...userData,
-            userType: 'super',
-            isPowerUser: false
+            userType: 'super'
         });
     }
 }

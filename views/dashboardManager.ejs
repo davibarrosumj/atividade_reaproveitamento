@@ -22,9 +22,14 @@
                             </ul>
                             <% if (canCreateAdmin) { %>
                                 <form action="/cadastro" method="GET" class="mt-3">
-                                    <button type="submit" class="btn btn-outline-primary">Criar novo administrador</button>
+                                    <button type="submit" class="btn btn-outline-primary w-100">Criar novo administrador</button>
                                 </form>
                             <% } %>
+                            
+                            <div class="mt-4 d-grid gap-2">
+                                <a href="/veiculos/registro" class="btn btn-success">Gerenciar Entrada / Saída</a>
+                            </div>
+
                             <h4 class="mt-4">Configuração:</h4>
                             <%- include('partials/flashMessages') %>
                             <form action="/dashboard/capacidade" method="POST" id="capacidadeForm">

@@ -5,14 +5,16 @@ const javascriptFiles = [
     'app.js',
     'database.js',
     'routes/authRoutes.js',
+    'routes/dashboardRoutes.js',
+    'routes/veiculoRoutes.js',
     'controllers/authController.js',
     'controllers/dashController.js',
     'controllers/userController.js',
-    'middlewares/sessionAuth.js',
-    'middlewares/authMiddleware.js',
-    'middlewares/adminStatusMiddleware.js',
+    'controllers/veiculoController.js',
+    'middlewares/auth.js',
     'models/estacionamentoModel.js',
     'models/userModel.js',
+    'models/registroModel.js',
     'public/dashboardManager.js'
 ];
 
@@ -33,6 +35,20 @@ const viewTests = [
         }
     },
     {
+        file: 'views/veiculosRegistro.ejs',
+        data: {
+            registrosAtivos: [
+                {
+                    id: 1,
+                    placa: 'ABC1D23',
+                    horarioEntrada: new Date()
+                }
+            ],
+            errorMessages: [],
+            successMessages: []
+        }
+    },
+    {
         file: 'views/dashboardUser.ejs',
         data: {
             user: {
@@ -42,7 +58,8 @@ const viewTests = [
             estacionamento: {
                 vagasDisponiveis: 140,
                 porcentagemOcupacao: 7
-            }
+            },
+            canCreateAdmin: true
         }
     },
     {

@@ -31,8 +31,7 @@ exports.postLogin = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        userType: user.userType,
-        isPowerUser: user.isPowerUser
+        userType: user.userType
     };
 
     req.session.user = sessionUser;
@@ -62,8 +61,7 @@ exports.ensurePowerUser = async () => {
         await powerUser.update({
             name: 'admin',
             password,
-            userType: 'super',
-            isPowerUser: true
+            userType: 'power'
         });
         return;
     }
@@ -72,8 +70,7 @@ exports.ensurePowerUser = async () => {
         name: 'admin',
         email: 'admin@mail.com',
         password,
-        userType: 'super',
-        isPowerUser: true
+        userType: 'power'
     });
 };
 

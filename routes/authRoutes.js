@@ -2,20 +2,16 @@ const express = require('express');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
-const dashController = require('../controllers/dashController');
 const userController = require('../controllers/userController');
 
-const authMiddleware = require('../middlewares/authMiddleware');
-const adminStatusMiddleware = require('../middlewares/adminStatusMiddleware');
+const { adminStatusMiddleware, cadastroAccessMiddleware } = require('../middlewares/auth');
 
 router.get('/', authController.getLoginPage);
-router.get('/cadastro', adminStatusMiddleware, userController.getCadastro);
-router.get('/dashboard', authMiddleware, adminStatusMiddleware, dashController.getDashboard);
+router.get('/cadastro', adminStatusMiddleware, cadastroAccessMiddleware, userController.getCadastro);
 
 router.post('/login', authController.postLogin);
 router.post('/logout', authController.postLogout);
-router.post('/cadastro', adminStatusMiddleware, userController.postCadastro);
-router.post('/dashboard/capacidade', authMiddleware, adminStatusMiddleware, dashController.postCapacidade);
+router.post('/cadastro', adminStatusMiddleware, cadastroAccessMiddleware, userController.postCadastro);
 router.post('/register', authController.postRegister);
 
 router.initializeSystem = authController.initializeSystem;

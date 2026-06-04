@@ -31,29 +31,28 @@ Estas praticas devem orientar as proximas features deste projeto.
 
 - `SESSION_SECRET` protege a sessao Express.
 - `JWT_SECRET` assina o JWT guardado em `req.session.authToken`; nao usar fallback para `SESSION_SECRET`.
-- O login deve assinar no JWT apenas dados essenciais do usuario: `id`, `name`, `email`, `userType` e `isPowerUser`.
+- O login deve assinar no JWT apenas dados essenciais do usuario: `id`, `name`, `email` e `userType`.
 - `authMiddleware` representa autenticacao obrigatoria: sem JWT valido, a rota deve redirecionar para login.
-- `adminStatusMiddleware` representa status administrativo opcional: deve calcular `req.isAdmin`, `req.isPowerUser` e `req.canCreateAdmin` sem bloquear rotas publicas.
-- Quando houver repeticao entre middlewares de autenticacao, centralizar apenas a validacao comum, mantendo claro o contraste entre autenticar usuario e derivar privilegios.
+- `adminStatusMiddleware` calcula permissões sem bloquear rotas: define `req.isAdmin`, `req.isPowerUser` e `req.canCreateAdmin` a partir de `userType`.
+- `authorize` é o middleware único de autorização que restringe acesso a rotas baseado nos perfis fornecidos (ex: `authorize(['super'])`).
+- `cadastroAccessMiddleware` protege a rota de cadastro de administrador limitando o acesso a usuários do tipo `'power'`.
 
 ## Usuarios e privilegios
 
-- `User` e o model Sequelize base.
-- Classes de comportamento como `SimpleUser` e `SuperUser` devem ficar na camada de controller enquanto o projeto estiver simples.
-- `SuperUser` significa administrador com acesso ao dashboard administrativo.
-- `isPowerUser` significa permissao especial para criar novos administradores.
-- O power user inicial deve continuar garantido durante a inicializacao do sistema.
-- Nao confundir administrador comum com power user.
+- `User` e o model Sequelize base. A flag `isPowerUser` foi descontinuada.
+- Os perfis são definidos estritamente na coluna `userType` com os valores:
+  - `'simple'`: Usuário comum, acessa o painel de vagas básico.
+  - `'super'`: Administrador, gerencia entrada/saída de veículos e altera capacidade total.
+  - `'power'`: Power User, acessa o painel básico mas tem acesso exclusivo a criar novos administradores.
+- O power user inicial continua garantido durante a inicializacao.
 - `isAdmin` deriva de `userType === 'super'`.
-- `canCreateAdmin` deriva de `isPowerUser`, nao de administrador comum.
+- `canCreateAdmin` deriva de `userType === 'power'`.
 
 ## Dashboards
 
-- A rota publica do painel deve permanecer `/dashboard`.
-- A escolha entre `dashboardUser` e `dashboardManager` deve ser feita no controller, usando informacoes preparadas por middleware.
-- Evitar rotas separadas para o painel administrativo enquanto a sessao ja for suficiente para decidir a view.
-- No dashboard administrativo, preferir controles HTML nativos quando forem suficientes; na edicao de capacidade total, usar apenas os controles padrao do input `type="number"`.
-- O dashboard do power user deve oferecer atalho para criar novo administrador, evitando que ele precise sair do dashboard e perca o contexto de privilegio ao voltar para a tela inicial.
+- A rota publica do painel deve permanecer `/dashboard` (usando o prefixo `/dashboard` registrado globalmente no `app.js`).
+- A escolha entre `dashboardUser` e `dashboardManager` deve ser feita no controller baseando-se no `req.isAdmin`.
+- O dashboard do power user (que renderiza `dashboardUser.ejs` porque ele possui `userType === 'power'`) deve exibir o atalho para cadastrar novos administradores se `canCreateAdmin` for verdadeiro.
 
 ## Backlog
 
@@ -70,8 +69,7 @@ Estas praticas devem orientar as proximas features deste projeto.
 ## Progresso recente
 
 - US01 concluida: dashboards exibem vagas disponiveis/ocupacao e administrador pode editar a capacidade total de vagas.
-- O dashboard administrativo usa JavaScript em `public/dashboardManager.js` para liberar edicao e salvar capacidade.
-- O dashboard do power user oferece atalho direto para criar novo administrador.
-- Mensagens de erro/sucesso usam `connect-flash` e `views/partials/flashMessages.ejs`.
-- Autenticacao passou a usar JWT assinado na sessao, validado por helper compartilhado em `middlewares/sessionAuth.js`.
-- `npm test` foi substituido por uma checagem real em `scripts/test.js`.
+- US02 concluida: página dedicada `/veiculos/registro` para entrada e saída de veículos, com controle de vagas e validação rígida de placas brasileiras.
+- US05 concluida: cadastro com diferenciação de usuários consolidada no campo único `userType` ('simple', 'super', 'power').
+- Separação de rotas concluída: rotas divididas em arquivos específicos (`authRoutes.js`, `dashboardRoutes.js`, `veiculoRoutes.js`) e prefixadas a partir do `app.js`.
+- Introdução de middleware de autorização único (`authorize.js`) para proteção de rotas por perfis.
