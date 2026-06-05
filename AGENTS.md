@@ -73,3 +73,5 @@ Estas praticas devem orientar as proximas features deste projeto.
 - Separação de rotas concluída: rotas divididas em arquivos específicos (`authRoutes.js`, `dashboardRoutes.js`, `veiculoRoutes.js`, `tiqueteRoutes.js`) e prefixadas a partir do `app.js`.
 - Introdução de middleware de autorização único (`authorize.js`) para proteção de rotas por perfis.
 - US03 concluida: controle e consumo de tíquetes com geração de código alfanumérico único (`TK-XXXXXX`), suporte a pagamento pré-pago e pós-pago, precificação diferenciada por tipo de veículo (carro/moto), validação/impedimento de reentrada de devedores, fluxo de saída indevida, tela de histórico de tíquetes, tela de lista de devedores com quitação de débito e campos de auditoria (`criadoPorId`, `validadoPorId`).
+- US06 concluida: configuração dinâmica de vagas e tarifas do estacionamento (capacidade de carros/motos, valores dos tíquetes de carros/motos) no banco de dados via `/dashboard/config`, restrito ao Super User (`'super'`).
+

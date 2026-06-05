@@ -160,6 +160,22 @@ const viewTests = [
             errorMessages: [],
             successMessages: []
         }
+    },
+    {
+        file: 'views/config.ejs',
+        data: {
+            estacionamento: {
+                capacidadeCarros: 150,
+                capacidadeMotos: 20,
+                vagasOcupadasCarros: 5,
+                vagasOcupadasMotos: 2,
+                valorTiqueteCarro: 4.00,
+                valorTiqueteMoto: 2.00
+            },
+            canCreateAdmin: true,
+            errorMessages: [],
+            successMessages: []
+        }
     }
 ];
 

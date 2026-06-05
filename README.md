@@ -4,14 +4,15 @@ Aplicacao web simples em Node.js, Express, EJS, Sequelize e PostgreSQL para evol
 
 ## Status atual
 
-O projeto possui autenticação básica com sessão e JWT, cadastro de usuários com três perfis distintos, controle de ocupação e capacidade, painel para entrada e saída de veículos com validação de placas, e controle e consumo de tíquetes (devedores/pagamentos).
+O projeto possui autenticação básica com sessão e JWT, cadastro de operadores restrito a Super Users, configuração dinâmica de capacidades e tarifas por veículo, controle de ocupação e capacidade em tempo real, painel para entrada e saída de veículos com validação de placas, e controle e consumo de tíquetes (devedores/pagamentos).
 
 Funcionalidades concluídas:
 
 - US01: exibição de vagas disponíveis, porcentagem de ocupação e capacidade total de vagas, segmentadas separadamente por tipo de veículo (carros e motos).
 - US02: entrada e saída de veículos com controle de vagas em tempo real e validação de placas.
 - US03: controle e consumo de tíquetes com geração automática de código único (`TK-XXXXXX`), suporte a pagamento pré-pago/pós-pago, precificação diferenciada por tipo de veículo (carro/moto), validação de reentrada de devedores, quitação de débitos, registro de saídas indevidas e auditoria.
-- US05: cadastro de usuários com diferenciação de perfis (simples e super).
+- US05: cadastro de operadores (`'simple'`) restrito ao Super User (`'super'`).
+- US06: painel de configurações gerais (`/dashboard/config`) para o Super User editar dinamicamente capacidades de vagas (carros/motos) e tarifas de cobrança, salvas e carregadas em banco de dados.
 
 Funcionalidades em andamento:
 
@@ -20,6 +21,7 @@ Funcionalidades em andamento:
 Funcionalidades ainda não iniciadas:
 
 - Relatórios, estatísticas e histórico de uso.
+
 
 ## Perfis de usuário
 
@@ -54,6 +56,9 @@ TIQUETE_VALOR_CARRO=4.00
 TIQUETE_VALOR_MOTO=2.00
 ```
 
+> [!NOTE]
+> As variáveis `ESTACIONAMENTO_CAPACIDADE_*` e `TIQUETE_VALOR_*` são usadas apenas como valores padrão (seed) ao inicializar/criar a tabela `Estacionamentos` no banco de dados. Após a criação, esses valores são lidos e modificados dinamicamente no banco de dados por meio da tela de configurações.
+
 `JWT_SECRET` assina as credenciais mantidas na sessao.
 
 ## Autenticacao e mensagens
@@ -70,6 +75,8 @@ TIQUETE_VALOR_MOTO=2.00
 - `POST /cadastro`: cria novo operador (tipo `'simple'`) (restrito a Super Users).
 - `POST /login`: autentica e redireciona para `/dashboard`.
 - `GET /dashboard`: renderiza o dashboard correto conforme o perfil da sessao.
+- `GET /dashboard/config`: tela de configurações do estacionamento (restrito a Super Users).
+- `POST /dashboard/config`: salva as configurações atualizadas de vagas e tarifas (restrito a Super Users).
 - `POST /logout`: encerra a sessao.
 - `GET /veiculos/registro`: painel de entrada e saída de veículos (apenas administradores).
 - `POST /veiculos/registro/entrada`: registra a entrada de um veículo e gera o tíquete correspondente.
@@ -79,15 +86,12 @@ TIQUETE_VALOR_MOTO=2.00
 - `GET /tiquetes/devedores`: lista de veículos devedores com débito pendente.
 - `POST /tiquetes/pagar/:id`: liquida a dívida de um tíquete (quitação/pagamento).
 
-No dashboard do Super User, há um atalho para cadastrar novos operadores.
-
-## Front-end
-
-Arquivos JavaScript de interacao das views ficam em `public/` e sao servidos pelo Express como arquivos estaticos.
+No dashboard do Super User, há atalhos para cadastrar novos operadores e acessar a página de configurações.
 
 ## Testes
 
 `npm test` executa `scripts/test.js`, que valida a sintaxe dos arquivos JavaScript principais e renderiza as views EJS com dados minimos.
+
 
 ## Observacao de desenvolvimento
 

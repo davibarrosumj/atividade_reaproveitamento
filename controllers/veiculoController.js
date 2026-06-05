@@ -73,7 +73,11 @@ exports.postEntrada = async (req, res) => {
             where: { id: 1 },
             defaults: {
                 vagasOcupadasCarros: 0,
-                vagasOcupadasMotos: 0
+                vagasOcupadasMotos: 0,
+                capacidadeCarros: Number(process.env.ESTACIONAMENTO_CAPACIDADE_CARROS || 150),
+                capacidadeMotos: Number(process.env.ESTACIONAMENTO_CAPACIDADE_MOTOS || 20),
+                valorTiqueteCarro: Number(process.env.TIQUETE_VALOR_CARRO || 4.00),
+                valorTiqueteMoto: Number(process.env.TIQUETE_VALOR_MOTO || 2.00)
             }
         });
 
@@ -114,8 +118,8 @@ exports.postEntrada = async (req, res) => {
         }
 
         const valorTiquete = isMoto
-            ? Number(process.env.TIQUETE_VALOR_MOTO || 2.00)
-            : Number(process.env.TIQUETE_VALOR_CARRO || 4.00);
+            ? Number(estacionamento.valorTiqueteMoto)
+            : Number(estacionamento.valorTiqueteCarro);
 
         await Tiquete.create({
             codigo: codigoUnico,
