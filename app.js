@@ -8,13 +8,15 @@ const session = require('express-session');
 const sequelize = require('./database');
 const authRoutes = require('./routes/authRoutes');
 const dashRoutes = require('./routes/dashRoutes');
+const donationRoutes = require('./routes/donationRoutes');
 const { seedDatabase } = require('./utils/seeder');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
 
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.set('view engine', 'ejs');
 
@@ -34,11 +36,12 @@ app.use((req, res, next) => {
 
 app.use(authRoutes);
 app.use(dashRoutes);
+app.use(donationRoutes);
 
 // Global Error Handler (must be registered after routes)
 app.use(errorMiddleware);
 
-sequelize.sync()
+sequelize.sync({ alter: true })
     .then(() => seedDatabase())
     .then(() => app.listen(
         process.env.PORT,

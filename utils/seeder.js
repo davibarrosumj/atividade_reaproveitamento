@@ -10,25 +10,36 @@ async function seedDatabase() {
             const password = process.env.PU_PASSWORD;
             const hash = await bcrypt.hash(password, 10);
 
-            // Create Admin
+            // Create Admin (no credits — admins cannot make or receive donations)
             await User.create({
                 name: 'Administrador',
                 email: 'admin@mail.com',
                 password: hash,
-                admin: true
+                admin: true,
+                credits: 0
             });
 
-            // Create Regular User
+            // Create Regular User 1
             await User.create({
-                name: 'Usuário Comum',
-                email: 'user@mail.com',
+                name: 'Maria Silva',
+                email: 'maria@mail.com',
                 password: hash,
-                admin: false
+                admin: false,
+                credits: 100.00
             });
 
-            console.log('Database seeded successfully!');
+            // Create Regular User 2
+            await User.create({
+                name: 'João Santos',
+                email: 'joao@mail.com',
+                password: hash,
+                admin: false,
+                credits: 100.00
+            });
+
+            console.log('Database seeded successfully! (1 admin + 2 regular users)');
         } else {
-            console.log('Database already contains users. Skipping seeding.');
+            console.log('Database already contains users. Skipping seed.');
         }
     } catch (error) {
         console.error('Error seeding database:', error);

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <%- include('partials/head', { title: 'Doar Item - Reaproveitamento' }) %>
+</head>
+<body class="bg-light">
+
+    <%- include('partials/navbar') %>
+
+    <div class="container my-5" style="max-width: 800px;">
+        <%- include('partials/alerts') %>
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-dark text-white p-4 border-0 position-relative">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-3 bg-success bg-opacity-25 p-2 me-3">
+                        <i class="bi bi-gift text-success fs-3"></i>
+                    </div>
+                    <div>
+                        <h1 class="h4 mb-0 fw-bold">Cadastrar Novo Item para Doação</h1>
+                        <p class="text-white-50 mb-0 small">Compartilhe e ajude a comunidade reutillizando materiais</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-4 bg-white">
+                <form id="donationForm" action="/doacoes/nova" method="POST">
+                    <div class="row g-3">
+                        <!-- Item Name -->
+                        <div class="col-md-6">
+                            <label for="name" class="form-label fw-semibold">Nome do Item</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-tag"></i></span>
+                                <input type="text" class="form-control border-start-0 bg-light bg-opacity-50" id="name" name="name" placeholder="Ex: Monitor Dell 24 polegadas" required>
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="col-md-6">
+                            <label for="category" class="form-label fw-semibold">Categoria</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-grid"></i></span>
+                                <select class="form-select border-start-0 bg-light bg-opacity-50" id="category" name="category" required>
+                                    <option value="" disabled selected>Selecione...</option>
+                                    <option value="Eletrônicos">Eletrônicos</option>
+                                    <option value="Roupas">Roupas</option>
+                                    <option value="Livros">Livros</option>
+                                    <option value="Móveis">Móveis</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Price (Symbolic Credit Value) -->
+                        <div class="col-md-6">
+                            <label for="price" class="form-label fw-semibold">Valor Simbólico (Créditos)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0">R$</span>
+                                <input type="number" class="form-control border-start-0 bg-light bg-opacity-50" id="price" name="price" min="1" max="500" step="0.01" placeholder="Ex: 50,00 (Entre R$ 1,00 e R$ 500,00)" required>
+                            </div>
+                            <div class="form-text text-muted small">
+                                O valor que você receberá em créditos de volta se outro usuário resgatar este item.
+                            </div>
+                        </div>
+
+                        <!-- Image File Upload -->
+                        <div class="col-md-6">
+                            <label for="imageFile" class="form-label fw-semibold">Foto do Item</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-image"></i></span>
+                                <input type="file" class="form-control border-start-0 bg-light bg-opacity-50" id="imageFile" accept="image/*" required>
+                            </div>
+                            <div class="form-text text-muted small">
+                                Tamanho máximo: 2MB. A foto será armazenada localmente de forma segura.
+                            </div>
+                            <div id="fileError" class="text-danger small mt-1" style="display: none;"></div>
+                        </div>
+
+                        <!-- Photo Base64 Hidden Input -->
+                        <input type="hidden" id="photo" name="photo">
+
+                        <!-- Item Description -->
+                        <div class="col-12">
+                            <label for="description" class="form-label fw-semibold">Descrição Detalhada</label>
+                            <textarea class="form-control bg-light bg-opacity-50" id="description" name="description" rows="4" placeholder="Descreva as condições do item, tempo de uso, ou detalhes de retirada..." required></textarea>
+                        </div>
+
+                        <!-- Image Preview Box -->
+                        <div class="col-12 text-center" id="previewContainer" style="display: none;">
+                            <hr>
+                            <label class="d-block fw-semibold mb-2 text-start">Pré-visualização da Imagem</label>
+                            <div class="d-inline-block p-2 border rounded-4 bg-light shadow-sm">
+                                <img id="imagePreview" src="" alt="Preview da imagem" style="max-height: 250px; max-width: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit and Cancel Buttons -->
+                    <div class="d-flex justify-content-between mt-4 border-top pt-4">
+                        <a href="/doacoes" class="btn btn-outline-secondary px-4"><i class="bi bi-x-circle me-2"></i>Cancelar</a>
+                        <button type="submit" id="submitBtn" class="btn btn-success px-5 fw-bold shadow-sm"><i class="bi bi-check-circle me-2"></i>Registrar Doação</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        const imageFile = document.getElementById('imageFile');
+        const photoInput = document.getElementById('photo');
+        const fileError = document.getElementById('fileError');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const submitBtn = document.getElementById('submitBtn');
+
+        imageFile.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            fileError.style.display = 'none';
+            previewContainer.style.display = 'none';
+            photoInput.value = '';
+            submitBtn.disabled = false;
+
+            if (!file) return;
+
+            // Check file size (2MB = 2 * 1024 * 1024 bytes)
+            const maxBytes = 2 * 1024 * 1024;
+            if (file.size > maxBytes) {
+                fileError.innerText = 'Erro: A imagem excede o tamanho limite de 2MB. Por favor, escolha um arquivo menor.';
+                fileError.style.display = 'block';
+                imageFile.value = '';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Convert to Base64
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                photoInput.value = base64;
+                
+                // Show preview
+                imagePreview.src = base64;
+                previewContainer.style.display = 'block';
+            };
+            reader.onerror = function() {
+                fileError.innerText = 'Erro ao ler a imagem. Tente outro arquivo.';
+                fileError.style.display = 'block';
+                submitBtn.disabled = true;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>

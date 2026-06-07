@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <%- include('partials/head', { title: 'Doações Disponíveis - Reaproveitamento' }) %>
+    <style>
+        .donation-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+        .img-container {
+            height: 200px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <%- include('partials/navbar') %>
+
+    <div class="container my-5">
+        <%- include('partials/alerts') %>
+
+
+        <!-- Search and Filters Section -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+            <div class="card-body p-4">
+                <h2 class="h5 fw-bold mb-3"><i class="bi bi-funnel me-2"></i>Buscar e Filtrar Doações</h2>
+                <form action="/doacoes" method="GET" class="row g-3">
+                    <!-- Search Input -->
+                    <div class="col-md-6">
+                        <label for="searchName" class="form-label small fw-semibold text-muted">Nome do Item</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control border-start-0 bg-light bg-opacity-50" id="searchName" name="name" value="<%= filters.name %>" placeholder="Digite o nome do item...">
+                        </div>
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <div class="col-md-4">
+                        <label for="filterCategory" class="form-label small fw-semibold text-muted">Filtrar por Categoria</label>
+                        <select class="form-select bg-light bg-opacity-50" id="filterCategory" name="category">
+                            <option value="">Todas as Categorias</option>
+                            <option value="Eletrônicos" <%= filters.category === 'Eletrônicos' ? 'selected' : '' %>>Eletrônicos</option>
+                            <option value="Roupas" <%= filters.category === 'Roupas' ? 'selected' : '' %>>Roupas</option>
+                            <option value="Livros" <%= filters.category === 'Livros' ? 'selected' : '' %>>Livros</option>
+                            <option value="Móveis" <%= filters.category === 'Móveis' ? 'selected' : '' %>>Móveis</option>
+                            <option value="Outros" <%= filters.category === 'Outros' ? 'selected' : '' %>>Outros</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Actions Buttons -->
+                    <div class="col-md-2 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold shadow-sm"><i class="bi bi-funnel-fill me-1"></i>Filtrar</button>
+                        <% if (filters.category || filters.name) { %>
+                            <a href="/doacoes" class="btn btn-outline-secondary px-3" title="Limpar Filtros"><i class="bi bi-trash"></i></a>
+                        <% } %>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Donations Grid -->
+        <h2 class="h4 fw-bold mb-4"><i class="bi bi-card-list me-2"></i>Itens Disponíveis</h2>
+
+        <% if (donations.length === 0) { %>
+            <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                <div class="my-4">
+                    <i class="bi bi-box2 text-muted" style="font-size: 4rem;"></i>
+                </div>
+                <h3 class="h5 fw-bold text-secondary">Nenhuma doação disponível no momento</h3>
+                <p class="text-muted">Experimente alterar os filtros de busca ou seja o primeiro a <a href="/doacoes/nova" class="text-success fw-bold text-decoration-none">cadastrar um item</a>!</p>
+            </div>
+        <% } else { %>
+            <div class="row g-4">
+                <% donations.forEach(function(item) { %>
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden donation-card bg-white">
+                            <!-- Image Container -->
+                            <div class="img-container">
+                                <span class="badge bg-dark category-badge shadow-sm"><%= item.category %></span>
+                                <% if (item.condition) { %>
+                                    <%
+                                        const condColors = {
+                                            'Perfeito': 'success',
+                                            'Bom': 'primary',
+                                            'Regular': 'warning text-dark',
+                                            'Ruim': 'orange',
+                                            'Quebrado': 'danger'
+                                        };
+                                    %>
+                                    <span class="badge bg-<%= condColors[item.condition] || 'secondary' %> shadow-sm" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+                                        <i class="bi bi-clipboard-check me-1"></i><%= item.condition %>
+                                    </span>
+                                <% } %>
+                                <img src="<%= item.photo %>" alt="<%= item.name %>">
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-4 d-flex flex-column">
+                                <h3 class="h5 fw-bold card-title mb-2 text-dark text-truncate" title="<%= item.name %>"><%= item.name %></h3>
+                                <p class="text-muted small card-text mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                    <%= item.description %>
+                                </p>
+                                
+                                <div class="border-top pt-3 mt-auto">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <span class="text-muted small d-block">Doador(a)</span>
+                                            <span class="fw-semibold text-dark text-truncate d-inline-block" style="max-width: 150px;"><%= item.donor.name %></span>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="text-muted small d-block">Valor</span>
+                                            <span class="h5 fw-bold text-success m-0">R$ <%= parseFloat(item.price).toFixed(2).replace('.', ',') %></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Button -->
+                                    <% if (item.userId === user.id) { %>
+                                        <button class="btn btn-outline-secondary w-100 fw-bold rounded-3" disabled>
+                                            <i class="bi bi-person-check me-2"></i>Seu Item
+                                        </button>
+                                    <% } else if (user.admin) { %>
+                                        <button class="btn btn-outline-secondary w-100 fw-bold rounded-3" disabled>
+                                            <i class="bi bi-eye me-2"></i>Somente Visualização
+                                        </button>
+                                    <% } else { %>
+                                        <button class="btn btn-success w-100 fw-bold rounded-3 shadow-sm hover-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#claimModal"
+                                                data-id="<%= item.id %>"
+                                                data-name="<%= item.name %>"
+                                                data-price="<%= item.price %>"
+                                                data-category="<%= item.category %>">
+                                            <i class="bi bi-cart-plus me-2"></i>Receber Doação
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Claim Confirmation Modal -->
+    <div class="modal fade" id="claimModal" tabindex="-1" aria-labelledby="claimModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                <div class="modal-header bg-dark text-white p-3 border-0">
+                    <h5 class="modal-title fw-bold" id="claimModalLabel"><i class="bi bi-question-circle text-success me-2"></i>Confirmar Recebimento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body p-4 bg-white">
+                    <p class="text-muted">Você está prestes a resgatar o seguinte item do sistema utilizando seus créditos:</p>
+                    
+                    <!-- Item Box Info -->
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="fw-bold mb-1 text-dark" id="modalItemName">---</h6>
+                                <span class="badge bg-secondary mb-0" id="modalItemCategory">---</span>
+                            </div>
+                            <div class="col-4 text-end">
+                                <span class="text-muted small d-block">Preço</span>
+                                <span class="fw-bold text-success" id="modalItemPrice">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Credits Info -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 p-2">
+                        <span class="text-muted">Seu saldo atual de créditos:</span>
+                        <span class="fw-bold text-dark fs-5" id="userCreditsDisplay">R$ <%= parseFloat(user.credits).toFixed(2).replace('.', ',') %></span>
+                    </div>
+
+                    <!-- Danger Insufficient Balance Warning -->
+                    <div id="insufficientBalanceAlert" class="alert alert-danger border-0 rounded-3 mb-0" style="display: none;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Saldo Insuficiente!</strong> Você não possui créditos suficientes para resgatar este item.
+                    </div>
+                </div>
+                
+                <div class="modal-footer bg-light p-3 border-0">
+                    <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="claimForm" method="POST" action="">
+                        <button type="submit" id="confirmClaimBtn" class="btn btn-success px-4 fw-bold shadow-sm">Confirmar Resgate</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <!-- Bootstrap 5 JavaScript Bundle (required for modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const claimModal = document.getElementById('claimModal');
+        const userCredits = <%= parseFloat(user.credits) %>;
+
+        claimModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const itemId = button.getAttribute('data-id');
+            const itemName = button.getAttribute('data-name');
+            const itemPrice = parseFloat(button.getAttribute('data-price'));
+            const itemCategory = button.getAttribute('data-category');
+
+            // Populate modal fields
+            document.getElementById('modalItemName').innerText = itemName;
+            document.getElementById('modalItemCategory').innerText = itemCategory;
+            document.getElementById('modalItemPrice').innerText = 'R$ ' + itemPrice.toFixed(2).replace('.', ',');
+
+            // Configure action form path
+            document.getElementById('claimForm').action = '/doacoes/receber/' + itemId;
+
+            const confirmBtn = document.getElementById('confirmClaimBtn');
+            const alertBox = document.getElementById('insufficientBalanceAlert');
+
+            // Check balance
+            if (userCredits < itemPrice) {
+                alertBox.style.display = 'block';
+                confirmBtn.disabled = true;
+            } else {
+                alertBox.style.display = 'none';
+                confirmBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

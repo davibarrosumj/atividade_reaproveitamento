@@ -5,7 +5,14 @@ const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const User = require('../models/user');
 
-exports.dashboardPage = (req, res) => res.render('dashboard', { user: req.user });
+exports.dashboardPage = async (req, res, next) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        res.render('dashboard', { user });
+    } catch (err) {
+        next(err);
+    }
+};
 
 exports.updateProfile = async (req, res, next) => {
     const { name, email, currentPassword, newPassword, confirmNewPassword } = req.body;

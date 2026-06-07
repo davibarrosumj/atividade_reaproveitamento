@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <%- include('partials/head', { title: 'Histórico de Sorteios - Reaproveitamento' }) %>
+    <style>
+        .hover-up {
+            transition: all 0.2s ease-in-out;
+        }
+        .hover-up:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        }
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+        }
+        .page-link:hover {
+            background-color: #f8f9fa;
+        }
+        .page-item.disabled .page-link {
+            background-color: transparent;
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <%- include('partials/navbar') %>
+
+    <div class="container my-5" style="max-width: 1050px;">
+        <%- include('partials/alerts') %>
+
+        <div class="d-flex align-items-center mb-4 animate__animated animate__fadeIn">
+            <div class="bg-warning bg-opacity-10 p-3 rounded-4 me-3 text-warning shadow-sm">
+                <i class="bi bi-gift-fill fs-2"></i>
+            </div>
+            <div>
+                <h1 class="h3 fw-bold mb-0 text-dark">Painel de Sorteios de Crédito</h1>
+                <p class="text-muted mb-0">Simule novos sorteios aleatórios e acompanhe o log de distribuições no sistema.</p>
+            </div>
+        </div>
+
+        <!-- Realizar Sorteio Card -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden animate__animated animate__fadeInUp">
+            <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3 text-success">
+                        <i class="bi bi-dice-6-fill fs-2"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-1 text-dark">Simular Novo Sorteio</h5>
+                        <p class="mb-0 text-muted small">Escolhe aleatoriamente um usuário comum e adiciona um bônus de R$ 50,00 ou R$ 100,00.</p>
+                    </div>
+                </div>
+                <form action="/sorteio" method="POST" class="m-0">
+                    <button type="submit" class="btn btn-warning fw-bold px-4 py-2.5 rounded-3 shadow hover-up">
+                        <i class="bi bi-gift-fill me-2"></i>Simular Sorteio de Créditos
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Histórico Table Card -->
+        <div class="card border-0 shadow-sm rounded-4 bg-white animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h5 fw-bold mb-0 text-dark"><i class="bi bi-clock-history me-2"></i>Histórico de Sorteios Realizados</h2>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary fw-bold py-2 px-3 rounded-pill fs-7">
+                        Total: <%= totalCount %> sorteio(s)
+                    </span>
+                </div>
+                
+                <% if (draws.length === 0) { %>
+                    <div class="text-center py-5">
+                        <div class="text-muted mb-3"><i class="bi bi-gift fs-1"></i></div>
+                        <p class="text-muted">Nenhum sorteio foi realizado ainda no sistema.</p>
+                    </div>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="border-0 rounded-start text-center" style="width: 80px;"># ID</th>
+                                    <th scope="col" class="border-0">Beneficiado</th>
+                                    <th scope="col" class="border-0">E-mail</th>
+                                    <th scope="col" class="border-0 text-center">Valor do Bônus</th>
+                                    <th scope="col" class="border-0 text-center">Realizado Em</th>
+                                    <th scope="col" class="border-0 rounded-end text-center">Admin Responsável</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% draws.forEach(draw => { %>
+                                    <tr>
+                                        <td class="text-center fw-bold text-muted">#<%= draw.id %></td>
+                                        <td>
+                                            <div class="fw-bold text-dark"><%= draw.winner ? draw.winner.name : 'N/A' %></div>
+                                        </td>
+                                        <td class="text-muted small"><%= draw.winner ? draw.winner.email : 'N/A' %></td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 fs-6 rounded-pill border border-success border-opacity-10">
+                                                + R$ <%= parseFloat(draw.amount).toFixed(2).replace('.', ',') %>
+                                            </span>
+                                        </td>
+                                        <td class="text-center text-muted small">
+                                            <%= new Date(draw.createdAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) %>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary fw-semibold px-2.5 py-1.5 rounded">
+                                                <i class="bi bi-shield-check me-1"></i><%= draw.admin ? draw.admin.name : 'N/A' %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination Controls -->
+                    <% if (totalPages > 1) { %>
+                        <nav aria-label="Navegação de páginas de sorteios" class="mt-4">
+                            <ul class="pagination justify-content-center m-0">
+                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                    <a class="page-link border-0 shadow-sm rounded-3 me-2 px-3 text-dark bg-white" href="/admin/sorteios?page=<%= currentPage - 1 %>">
+                                        <i class="bi bi-chevron-left me-1"></i>Anterior
+                                    </a>
+                                </li>
+                                
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                        <a class="page-link border-0 shadow-sm rounded-3 me-2 px-3 <%= currentPage === i ? 'bg-warning text-dark fw-bold shadow-sm' : 'text-dark bg-white' %>" href="/admin/sorteios?page=<%= i %>"><%= i %></a>
+                                    </li>
+                                <% end %>
+                                
+                                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                    <a class="page-link border-0 shadow-sm rounded-3 px-3 text-dark bg-white" href="/admin/sorteios?page=<%= currentPage + 1 %>">
+                                        Próximo<i class="bi bi-chevron-right ms-1"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>
