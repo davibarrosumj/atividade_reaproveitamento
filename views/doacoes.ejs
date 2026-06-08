@@ -3,48 +3,29 @@
 
 <head>
     <%- include('partials/head', { title: 'Doações Disponíveis - Reaproveitamento' }) %>
-        <style>
-            .donation-card {
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-
-            .donation-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
-            }
-
-            .img-container {
-                height: 200px;
-                overflow: hidden;
-                background-color: #f8f9fa;
-                position: relative;
-            }
-
-            .img-container img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            .category-badge {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                z-index: 10;
-            }
-        </style>
 </head>
 
-<body class="bg-light">
+<body>
 
     <%- include('partials/navbar') %>
 
-        <div class="container my-5">
+        <div class="container page-container my-5">
             <%- include('partials/alerts') %>
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-header__icon page-header__icon--primary">
+                        <i class="bi bi-box2-heart"></i>
+                    </div>
+                    <div>
+                        <h1 class="page-header__title">Doações Disponíveis</h1>
+                        <p class="page-header__subtitle">Encontre itens disponíveis e resgate com seus créditos.</p>
+                    </div>
+                </div>
 
 
                 <!-- Search and Filters Section -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
+                <div class="app-card mb-4">
                     <div class="card-body p-4">
                         <h2 class="h5 fw-bold mb-3"><i class="bi bi-funnel me-2"></i>Buscar e Filtrar Doações</h2>
                         <form action="/doacoes" method="GET" class="row g-3">
@@ -97,7 +78,7 @@
                 <h2 class="h4 fw-bold mb-4"><i class="bi bi-card-list me-2"></i>Itens Disponíveis</h2>
 
                 <% if (donations.length===0) { %>
-                    <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <div class="app-card p-5 text-center">
                         <div class="my-4">
                             <i class="bi bi-box2 text-muted" style="font-size: 4rem;"></i>
                         </div>
@@ -111,7 +92,7 @@
                             <% donations.forEach(function(item) { %>
                                 <div class="col-md-4 col-sm-6">
                                     <div
-                                        class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden donation-card bg-white">
+                                        class="app-card h-100 donation-card">
                                         <!-- Image Container -->
                                         <div class="img-container">
                                             <span class="badge bg-dark category-badge shadow-sm">

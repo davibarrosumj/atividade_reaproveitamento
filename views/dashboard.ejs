@@ -1,104 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <%- include('partials/head', { title: 'Dashboard - Reaproveitamento' }) %>
 </head>
-<body class="bg-light">
+
+<body>
 
     <%- include('partials/navbar') %>
 
-    <div class="container my-5">
+    <div class="container page-container my-5">
         <%- include('partials/alerts') %>
 
-        <!-- Dashboard Content -->
-        <div class="row g-4">
-            <div class="col-md-4">
-                <!-- User Information Card -->
-                <div class="card shadow border-0 rounded-3">
-                    <div class="card-body p-4">
-                        <h2 class="card-title h5 mb-3 fw-bold">Perfil do Usuário</h2>
-                        <hr>
-                        <div class="mb-3">
-                            <label class="text-muted small d-block">Nome</label>
-                            <span class="fw-semibold"><%= user.name || 'N/A' %></span>
-                        </div>
-                        <div class="mb-3">
-                            <label class="text-muted small d-block">E-mail</label>
-                            <span class="fw-semibold"><%= user.email || 'N/A' %></span>
-                        </div>
-                        <div class="mb-2">
-                            <label class="text-muted small d-block">Nível de Acesso</label>
-                            <% if (user.admin) { %>
-                                <span class="badge bg-danger">Administrador</span>
-                            <% } else { %>
-                                <span class="badge bg-success">Usuário Comum</span>
-                            <% } %>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header__icon page-header__icon--primary">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <div>
+                <h1 class="page-header__title">Meu Perfil</h1>
+                <p class="page-header__subtitle">Visualize e edite as informações da sua conta.</p>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <ul class="nav app-tabs" id="dashboardTabs" role="tablist">
+            <li class="nav-item flex-fill text-center" role="presentation">
+                <button class="nav-link active w-100" id="perfil-tab" data-bs-toggle="pill"
+                    data-bs-target="#perfil-tab-pane" type="button" role="tab"
+                    aria-controls="perfil-tab-pane" aria-selected="true">
+                    <i class="bi bi-person-circle"></i> Perfil do Usuário
+                </button>
+            </li>
+            <li class="nav-item flex-fill text-center" role="presentation">
+                <button class="nav-link w-100" id="editar-tab" data-bs-toggle="pill"
+                    data-bs-target="#editar-tab-pane" type="button" role="tab"
+                    aria-controls="editar-tab-pane" aria-selected="false">
+                    <i class="bi bi-pencil-square"></i> Editar Perfil
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="dashboardTabContent">
+
+            <!-- Perfil do Usuário Tab -->
+            <div class="tab-pane fade show active" id="perfil-tab-pane" role="tabpanel"
+                aria-labelledby="perfil-tab" tabindex="0">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="app-card">
+                            <div class="card-body p-4">
+                                <h2 class="card-title h5 mb-3 fw-bold">Perfil do Usuário</h2>
+                                <hr>
+                                <div class="mb-3">
+                                    <label class="text-muted small d-block">Nome</label>
+                                    <span class="fw-semibold"><%= user.name || 'N/A' %></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="text-muted small d-block">E-mail</label>
+                                    <span class="fw-semibold"><%= user.email || 'N/A' %></span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="text-muted small d-block">Nível de Acesso</label>
+                                    <% if (user.admin) { %>
+                                        <span class="badge bg-danger">Administrador</span>
+                                    <% } else { %>
+                                        <span class="badge bg-success">Usuário Comum</span>
+                                    <% } %>
+                                </div>
+                                <hr>
+                                <button class="btn btn-outline-primary btn-sm" id="goToEditTabBtn" type="button">
+                                    <i class="bi bi-pencil me-1"></i>Editar Perfil
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <!-- Main Dashboard Board -->
-                <div class="card shadow border-0 rounded-3">
-                    <div class="card-body p-4">
-                        <h1 class="h3 mb-3 fw-bold">Painel de Controle</h1>
-                        <p class="text-muted">Bem-vindo ao sistema. Este painel permite que você gerencie e acompanhe as atividades de reaproveitamento do sistema.</p>
-                        
-                        <div class="row g-3 mt-3">
-                            <div class="col-sm-6">
-                                <div class="p-3 border rounded bg-white shadow-sm">
-                                    <h3 class="h6 text-muted mb-2">Sessão Ativa</h3>
-                                    <p class="h4 mb-0 text-primary">Sim</p>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="p-3 border rounded bg-white shadow-sm">
-                                    <h3 class="h6 text-muted mb-2">Expiração do Token</h3>
-                                    <p class="h4 mb-0 text-warning">1 hora</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Edit Profile Card -->
-                <div class="card shadow border-0 rounded-3 mt-4">
+            <!-- Editar Perfil Tab -->
+            <div class="tab-pane fade" id="editar-tab-pane" role="tabpanel"
+                aria-labelledby="editar-tab" tabindex="0">
+                <div class="app-card">
                     <div class="card-body p-4">
                         <h2 class="card-title h4 mb-3 fw-bold">Editar Perfil</h2>
                         <p class="text-muted">Altere suas credenciais. É necessário confirmar sua senha atual.</p>
-                        
+
                         <form id="profileForm" action="/dashboard/profile" method="post">
                             <div class="row g-3">
                                 <div class="col-sm-6">
                                     <label for="profileName" class="form-label">Nome Completo</label>
-                                    <input type="text" class="form-control" id="profileName" name="name" value="<%= user.name %>" required>
+                                    <input type="text" class="form-control" id="profileName" name="name"
+                                        value="<%= user.name %>" required>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="profileEmail" class="form-label">E-mail</label>
-                                    <input type="email" class="form-control" id="profileEmail" name="email" value="<%= user.email %>" required>
+                                    <input type="email" class="form-control" id="profileEmail" name="email"
+                                        value="<%= user.email %>" required>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="profileNewPassword" class="form-label">Nova Senha (opcional)</label>
-                                    <input type="password" class="form-control" id="profileNewPassword" name="newPassword" placeholder="Mínimo 8 caracteres com Maiúscula, Minúscula e Número">
+                                    <input type="password" class="form-control" id="profileNewPassword"
+                                        name="newPassword"
+                                        placeholder="Mínimo 8 caracteres com Maiúscula, Minúscula e Número">
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="profileConfirmNewPassword" class="form-label">Confirmar Nova Senha</label>
-                                    <input type="password" class="form-control" id="profileConfirmNewPassword" name="confirmNewPassword" placeholder="Confirme a nova senha">
+                                    <input type="password" class="form-control" id="profileConfirmNewPassword"
+                                        name="confirmNewPassword" placeholder="Confirme a nova senha">
                                 </div>
                                 <div class="col-12">
-                                    <label for="profileCurrentPassword" class="form-label fw-bold text-danger">Senha Atual (obrigatória)</label>
-                                    <input type="password" class="form-control border-danger" id="profileCurrentPassword" name="currentPassword" placeholder="Digite sua senha atual para salvar as alterações" required>
+                                    <label for="profileCurrentPassword" class="form-label fw-bold text-danger">
+                                        Senha Atual (obrigatória)
+                                    </label>
+                                    <input type="password" class="form-control border-danger"
+                                        id="profileCurrentPassword" name="currentPassword"
+                                        placeholder="Digite sua senha atual para salvar as alterações" required>
                                 </div>
                             </div>
-                            <button type="submit" id="profileSubmitBtn" class="btn btn-primary mt-4">Salvar Alterações</button>
+                            <button type="submit" id="profileSubmitBtn" class="btn btn-primary mt-4">
+                                Salvar Alterações
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+
+        </div><!-- /.tab-content -->
     </div>
 
     <%- include('partials/footer') %>
+    <script src="/js/dashboard.js"></script>
 </body>
+
 </html>

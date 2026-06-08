@@ -3,40 +3,31 @@
 
 <head>
     <%- include('partials/head', { title: 'Meu Histórico - Reaproveitamento' }) %>
-        <style>
-            .history-thumb {
-                width: 70px;
-                height: 70px;
-                object-fit: cover;
-                border-radius: 8px;
-                background-color: #f8f9fa;
-            }
-        </style>
 </head>
 
-<body class="bg-light">
+<body>
 
     <%- include('partials/navbar') %>
 
-        <div class="container my-5" style="max-width: 1000px;">
+        <div class="container page-container my-5">
             <%- include('partials/alerts') %>
 
-                <div class="d-flex align-items-center mb-4">
-                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 me-3 text-primary shadow-sm">
-                        <i class="bi bi-clock-history fs-2"></i>
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-header__icon page-header__icon--primary">
+                        <i class="bi bi-clock-history"></i>
                     </div>
                     <div>
-                        <h1 class="h3 fw-bold mb-0 text-dark">Histórico de Movimentações</h1>
-                        <p class="text-muted mb-0">Gerencie e acompanhe seus itens cadastrados para doação e os itens
-                            que você resgatou.</p>
+                        <h1 class="page-header__title">Histórico de Movimentações</h1>
+                        <p class="page-header__subtitle">Gerencie e acompanhe seus itens cadastrados para doação e os itens que você resgatou.</p>
                     </div>
                 </div>
 
-                <!-- Navigation Tabs -->
-                <ul class="nav nav-pills mb-4 bg-white p-2 rounded-4 shadow-sm" id="pills-tab" role="tablist">
+                <!-- Tab Navigation -->
+                <ul class="nav app-tabs" id="pills-tab" role="tablist">
                     <li class="nav-item flex-fill text-center" role="presentation">
                         <button
-                            class="nav-link active w-100 fw-bold py-3 px-4 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                            class="nav-link active w-100"
                             id="pills-offered-tab" data-bs-toggle="pill" data-bs-target="#pills-offered" type="button"
                             role="tab" aria-controls="pills-offered" aria-selected="true">
                             <i class="bi bi-gift-fill"></i> Minhas Doações Oferecidas
@@ -47,7 +38,7 @@
                     </li>
                     <li class="nav-item flex-fill text-center" role="presentation">
                         <button
-                            class="nav-link w-100 fw-bold py-3 px-4 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                            class="nav-link w-100"
                             id="pills-received-tab" data-bs-toggle="pill" data-bs-target="#pills-received" type="button"
                             role="tab" aria-controls="pills-received" aria-selected="false">
                             <i class="bi bi-bag-heart-fill"></i> Itens Recebidos
@@ -64,7 +55,7 @@
                     <div class="tab-pane fade show active" id="pills-offered" role="tabpanel"
                         aria-labelledby="pills-offered-tab">
                         <% if (offeredItems.length===0) { %>
-                            <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                            <div class="app-card p-5 text-center">
                                 <div class="my-3 text-muted">
                                     <i class="bi bi-gift" style="font-size: 3rem;"></i>
                                 </div>
@@ -77,7 +68,7 @@
                                 </div>
                             </div>
                             <% } else { %>
-                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                                <div class="app-card overflow-hidden">
                                     <div class="table-responsive">
                                         <table class="table align-middle table-hover mb-0">
                                             <thead class="table-light text-muted small uppercase fw-bold border-bottom">
@@ -96,7 +87,7 @@
                                                         <td class="ps-4 py-3">
                                                             <div class="d-flex align-items-center">
                                                                 <img src="<%= item.photo %>"
-                                                                    class="history-thumb me-3 shadow-sm border"
+                                                                    class="item-thumb me-3 shadow-sm border"
                                                                     alt="<%= item.name %>">
                                                                 <div>
                                                                     <h6 class="fw-bold mb-1 text-dark">
@@ -277,7 +268,7 @@
                     <!-- Received Items Tab -->
                     <div class="tab-pane fade" id="pills-received" role="tabpanel" aria-labelledby="pills-received-tab">
                         <% if (receivedItems.length===0) { %>
-                            <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                            <div class="app-card p-5 text-center">
                                 <div class="my-3 text-muted">
                                     <i class="bi bi-bag-heart" style="font-size: 3rem;"></i>
                                 </div>
@@ -290,7 +281,7 @@
                                 </div>
                             </div>
                             <% } else { %>
-                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                                <div class="app-card overflow-hidden">
                                     <div class="table-responsive">
                                         <table class="table align-middle table-hover mb-0">
                                             <thead class="table-light text-muted small uppercase fw-bold border-bottom">
@@ -310,7 +301,7 @@
                                                         <td class="ps-4 py-3">
                                                             <div class="d-flex align-items-center">
                                                                 <img src="<%= item.photo %>"
-                                                                    class="history-thumb me-3 shadow-sm border"
+                                                                    class="item-thumb me-3 shadow-sm border"
                                                                     alt="<%= item.name %>">
                                                                 <div>
                                                                     <h6 class="fw-bold mb-1 text-dark">

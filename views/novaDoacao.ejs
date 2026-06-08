@@ -3,26 +3,26 @@
 <head>
     <%- include('partials/head', { title: 'Doar Item - Reaproveitamento' }) %>
 </head>
-<body class="bg-light">
+<body>
 
     <%- include('partials/navbar') %>
 
-    <div class="container my-5" style="max-width: 800px;">
+    <div class="container page-container my-5">
         <%- include('partials/alerts') %>
 
-        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-            <div class="card-header bg-dark text-white p-4 border-0 position-relative">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-3 bg-success bg-opacity-25 p-2 me-3">
-                        <i class="bi bi-gift text-success fs-3"></i>
-                    </div>
-                    <div>
-                        <h1 class="h4 mb-0 fw-bold">Cadastrar Novo Item para Doação</h1>
-                        <p class="text-white-50 mb-0 small">Compartilhe e ajude a comunidade reutillizando materiais</p>
-                    </div>
-                </div>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header__icon page-header__icon--primary">
+                <i class="bi bi-gift"></i>
             </div>
-            
+            <div>
+                <h1 class="page-header__title">Cadastrar Novo Item</h1>
+                <p class="page-header__subtitle">Compartilhe e ajude a comunidade reutilizando materiais.</p>
+            </div>
+        </div>
+
+        <div class="app-card">
+
             <div class="card-body p-4 bg-white">
                 <form id="donationForm" action="/doacoes/nova" method="POST">
                     <div class="row g-3">

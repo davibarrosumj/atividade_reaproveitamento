@@ -37,6 +37,12 @@ As views utilizam partials para evitar duplicações de cabeçalhos HTML, import
 A lógica duplicada de geração de tokens JWT e configuração de cookies, que existia tanto no `authController` quanto no `dashController`, foi consolidada em um utilitário compartilhado:
 * `utils/token.js`: Exporta `generateToken(user)` para criação padronizada do token JWT e `setTokenCookie(res, token)` para configuração segura do cookie (`httpOnly`, `secure`, `sameSite`).
 
+### 5.2. Padronização Visual (Global CSS)
+Todo o estilo das páginas foi unificado em um único arquivo de estilos globais (`public/css/style.css`), eliminando o uso de blocos `<style>` inline nas views e garantindo uma experiência visual consistente (homogênea) em toda a aplicação:
+* **Classes Utilitárias Compartilhadas**: Criação de classes como `.app-card`, `.app-tabs` e `.page-header` para que painéis, abas e cabeçalhos de todas as telas possuam a mesma cor, sombra e formato (border-radius).
+* **Containers Responsivos**: Uso da classe `.page-container` limitando a largura máxima (`max-width: 960px`) com responsividade atrelada ao framework, garantindo perfeita adaptação no redimensionamento da janela do navegador para todas as abas.
+* **Cores e Tema Homogêneos**: Toda a paleta de cores, botões de ação e ícones de cabeçalho foram alinhados visualmente para usar o tema primário do sistema, eliminando discrepâncias entre o dashboard do usuário e o painel de administração.
+
 ### 6. Tratamento Centralizado de Erros
 * **Error Middleware**: Middleware global do Express registrado após as rotas para interceptar quaisquer exceções inesperadas do servidor.
 * **Página de Erro Personalizada (`views/error.ejs`)**: Tela amigável para exibição de erros.

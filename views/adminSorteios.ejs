@@ -3,56 +3,28 @@
 
 <head>
     <%- include('partials/head', { title: 'Histórico de Sorteios - Reaproveitamento' }) %>
-        <style>
-            .hover-up {
-                transition: all 0.2s ease-in-out;
-            }
-
-            .hover-up:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
-            }
-
-            .table th {
-                font-weight: 600;
-                text-transform: uppercase;
-                font-size: 0.75rem;
-                letter-spacing: 0.5px;
-                color: #6c757d;
-            }
-
-            .page-link:hover {
-                background-color: #f8f9fa;
-            }
-
-            .page-item.disabled .page-link {
-                background-color: transparent;
-                border-color: transparent;
-            }
-        </style>
 </head>
 
-<body class="bg-light">
+<body>
 
     <%- include('partials/navbar') %>
 
-        <div class="container my-5" style="max-width: 1050px;">
+        <div class="container page-container my-5">
             <%- include('partials/alerts') %>
 
-                <div class="d-flex align-items-center mb-4 animate__animated animate__fadeIn">
-                    <div class="bg-warning bg-opacity-10 p-3 rounded-4 me-3 text-warning shadow-sm">
-                        <i class="bi bi-gift-fill fs-2"></i>
+                <!-- Page Header -->
+                <div class="page-header animate__animated animate__fadeIn">
+                    <div class="page-header__icon page-header__icon--primary">
+                        <i class="bi bi-gift-fill"></i>
                     </div>
                     <div>
-                        <h1 class="h3 fw-bold mb-0 text-dark">Painel de Sorteios de Crédito</h1>
-                        <p class="text-muted mb-0">Simule novos sorteios aleatórios e acompanhe o log de distribuições
-                            no sistema.</p>
+                        <h1 class="page-header__title">Sorteios e Ganhadores</h1>
+                        <p class="page-header__subtitle">Realize sorteios de itens e visualize o histórico de ganhadores.</p>
                     </div>
                 </div>
 
                 <!-- Realizar Sorteio Card -->
-                <div
-                    class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden animate__animated animate__fadeInUp">
+                <div class="app-card mb-4">
                     <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div class="d-flex align-items-center">
                             <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3 text-success">
@@ -73,7 +45,7 @@
                 </div>
 
                 <!-- Histórico Table Card -->
-                <div class="card border-0 shadow-sm rounded-4 bg-white animate__animated animate__fadeInUp"
+                <div class="app-card animate__animated animate__fadeInUp"
                     style="animation-delay: 0.1s;">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
